@@ -1,7 +1,9 @@
 export const authConfig = {
   loginUrl: "/login",
   signupUrl: "/signup",
-  callbackUrl: "/auth/callback",
+  callbackUrl: "/api/auth/callback",
   redirectAfterSignout: "/",
+  redirectAfterSignin: "/successtest",
+  onboardingUrl: "/onboarding",
   protectedRoutes: ["/dashboard", "/settings"],
 };
