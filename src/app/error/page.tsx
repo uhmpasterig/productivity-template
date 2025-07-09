@@ -1,7 +1,7 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import ErrorDisplay from "@/components/ErrorDisplay";
-import PageContainer from "@/components/PageContainer";
+import PageContainer from "@/components/layout/PageContainer";
+import { ErrorPage, commonActions } from "@/components/ui/status-page-presets";
 
 export type ErrorPageParams = {
   error?: string;
@@ -9,20 +9,21 @@ export type ErrorPageParams = {
   goBack?: boolean;
 };
 
-export default function ErrorPage() {
+export default function ErrorPageRoute() {
   const searchParams = useSearchParams();
-  const title = searchParams.get("error") || undefined;
-  const message = searchParams.get("message") || undefined;
-  const goBack = searchParams.get("goBack") || undefined;
+  const title = searchParams.get("error") || "Something went wrong";
+  const message =
+    searchParams.get("message") ||
+    "We're sorry, but something unexpected happened. Please try again.";
+
+  const actions = [
+    commonActions.goHome,
+    commonActions.support,
+  ];
 
   return (
     <PageContainer>
-      <ErrorDisplay
-        title={title}
-        message={message}
-        showRefresh={false}
-        showGoBack={goBack === "true"}
-      />
+      <ErrorPage title={title} message={message} actions={actions} />
     </PageContainer>
   );
 }

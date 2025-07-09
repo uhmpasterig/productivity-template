@@ -1,7 +1,7 @@
 "use server";
 
 import { redirectToErrorPage } from "@/utils/error";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import { buildUrl } from "@/utils/url";
 import { NextResponse } from "next/server";
 
