@@ -45,6 +45,7 @@ export async function updateSession(request: NextRequest) {
     !request.nextUrl.pathname.startsWith("/error") &&
     !request.nextUrl.pathname.startsWith("/login") &&
     !request.nextUrl.pathname.startsWith("/signup") &&
+    !request.nextUrl.pathname.startsWith("/signout") &&
     !request.nextUrl.pathname.startsWith("/api/auth/callback") &&
     !request.nextUrl.pathname.startsWith("/auth")
   ) {
