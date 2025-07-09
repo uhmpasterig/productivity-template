@@ -1,3 +1,4 @@
+"use client";
 import { XCircle, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 

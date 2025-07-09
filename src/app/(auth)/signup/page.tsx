@@ -1,11 +1,12 @@
+import PageContainer from "@/components/PageContainer";
 import AuthForm from "../AuthPage";
 
 export default function SignupPage() {
   return (
-    <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+    <PageContainer>
       <div className="w-full max-w-sm">
         <AuthForm mode="signup" />
       </div>
-    </div>
+    </PageContainer>
   );
 }

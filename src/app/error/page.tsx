@@ -1,6 +1,7 @@
 "use client";
 import { useSearchParams } from "next/navigation";
 import ErrorDisplay from "@/components/ErrorDisplay";
+import PageContainer from "@/components/PageContainer";
 
 export type ErrorPageParams = {
   error?: string;
@@ -15,11 +16,13 @@ export default function ErrorPage() {
   const goBack = searchParams.get("goBack") || undefined;
 
   return (
-    <ErrorDisplay
-      title={title}
-      message={message}
-      showRefresh={false}
-      showGoBack={goBack === "true"}
-    />
+    <PageContainer>
+      <ErrorDisplay
+        title={title}
+        message={message}
+        showRefresh={false}
+        showGoBack={goBack === "true"}
+      />
+    </PageContainer>
   );
 }

@@ -1,7 +1,10 @@
+"use client";
+
 import { AlertTriangle, ArrowLeft, Home, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React from "react";
+import { motion } from "framer-motion";
 
 interface ErrorDisplayProps {
   title?: string;
@@ -35,7 +38,13 @@ const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
   const handleGoBack = goBack || defaultGoBack;
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
+    <motion.div
+      className="flex items-center justify-center"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.3 }}
+    >
       <div className="w-full max-w-md">
         <div className="flex flex-col gap-6 text-center">
           <div className="flex flex-col items-center gap-4">
@@ -71,7 +80,7 @@ const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
