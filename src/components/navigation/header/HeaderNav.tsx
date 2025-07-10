@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { CircleCheckIcon, CircleHelpIcon, CircleIcon } from "lucide-react"
+import { LucideIcon } from "lucide-react"
 
 import {
   NavigationMenu,
@@ -15,184 +15,235 @@ import {
 } from "@/components/ui/navigation-menu"
 import { cn } from "@/utils/cn"
 
-const components: { title: string; href: string; description: string }[] = [
-  {
-    title: "Alert Dialog",
-    href: "/",
-    description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
-  },
-  {
-    title: "Hover Card",
-    href: "/",
-    description:
-      "For sighted users to preview content available behind a link.",
-  },
-  {
-    title: "Progress",
-    href: "/",
-    description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-  },
-  {
-    title: "Scroll-area",
-    href: "/",
-    description: "Visually or semantically separates content.",
-  },
-  {
-    title: "Tabs",
-    href: "/",
-    description:
-      "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-  },
-  {
-    title: "Tooltip",
-    href: "/",
-    description:
-      "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
-  },
-]
+// Header Navigation Configuration Types
+export interface HeaderNavConfig {
+  items: HeaderNavItem[]
+  viewport?: boolean
+}
 
-export function HeaderNav() {
+export interface HeaderNavItem {
+  type: 'dropdown' | 'link' | 'mega'
+  label: string
+  href?: string
+  content?: HeaderNavDropdownContent
+  style?: HeaderNavItemStyle
+}
+
+export interface HeaderNavDropdownContent {
+  layout: 'grid' | 'list' | 'featured'
+  width: 'sm' | 'md' | 'lg' | 'xl'
+  columns?: 1 | 2 | 3 | 4
+  sections?: HeaderNavSection[]
+}
+
+export interface HeaderNavSection {
+  type: 'featured' | 'list' | 'icon-list' | 'description-list'
+  title?: string
+  description?: string
+  href?: string
+  items?: HeaderNavSectionItem[]
+  featured?: HeaderNavFeaturedSection
+}
+
+export interface HeaderNavSectionItem {
+  label: string
+  href: string
+  description?: string
+  icon?: LucideIcon
+}
+
+export interface HeaderNavFeaturedSection {
+  title: string
+  description: string
+  href: string
+  gradient?: 'muted' | 'primary' | 'secondary'
+}
+
+export interface HeaderNavItemStyle {
+  transition?: boolean
+}
+
+// Helper functions
+const getWidthClass = (width: string) => {
+  switch (width) {
+    case 'sm': return 'w-[200px]'
+    case 'md': return 'w-[300px] md:w-[400px]'
+    case 'lg': return 'w-[400px] md:w-[500px] lg:w-[600px]'
+    case 'xl': return 'w-[400px] md:w-[500px] lg:w-[700px]'
+    default: return 'w-[300px]'
+  }
+}
+
+const getGridClass = (columns: number, layout: string) => {
+  if (layout === 'grid') {
+    switch (columns) {
+      case 1: return 'grid-cols-1'
+      case 2: return 'grid-cols-2'
+      case 3: return 'grid-cols-3'
+      case 4: return 'grid-cols-4'
+      default: return 'grid-cols-2'
+    }
+  }
+  return ''
+}
+
+const getGradientClass = (gradient: string) => {
+  switch (gradient) {
+    case 'muted': return 'from-muted/50 to-muted bg-gradient-to-b'
+    case 'primary': return 'from-primary/50 to-primary bg-gradient-to-b'
+    case 'secondary': return 'from-secondary/50 to-secondary bg-gradient-to-b'
+    default: return 'from-muted/50 to-muted bg-gradient-to-b'
+  }
+}
+
+// Header Navigation Component
+function HeaderNavigation({ config }: { config: HeaderNavConfig }) {
   return (
-    <NavigationMenu viewport={false}>
+    <NavigationMenu viewport={config.viewport}>
       <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Home</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid gap-2 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-              <li className="row-span-3">
-                <NavigationMenuLink asChild>
-                  <Link
-                    className="from-muted/50 to-muted flex h-full w-full flex-col justify-end rounded-md bg-linear-to-b p-6 no-underline outline-hidden select-none focus:shadow-md"
-                    href="/"
-                  >
-                    <div className="mt-4 mb-2 text-lg font-medium">
-                      shadcn/ui
-                    </div>
-                    <p className="text-muted-foreground text-sm leading-tight">
-                      Beautifully designed components built with Tailwind CSS.
-                    </p>
-                  </Link>
-                </NavigationMenuLink>
-              </li>
-              <ListItem href="/" title="Introduction">
-                Re-usable components built using Radix UI and Tailwind CSS.
-              </ListItem>
-              <ListItem href="/" title="Installation">
-                How to install dependencies and structure your app.
-              </ListItem>
-              <ListItem href="/" title="Typography">
-                Styles for headings, paragraphs, lists...etc
-              </ListItem>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Components</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-2 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-              {components.map((component) => (
-                <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
-                >
-                  {component.description}
-                </ListItem>
-              ))}
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), "transition-none")}>
-            <Link href="/">Docs</Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>List</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[300px] gap-4">
-              <li>
-                <NavigationMenuLink asChild>
-                  <Link href="#">
-                    <div className="font-medium">Components</div>
-                    <div className="text-muted-foreground">
-                      Browse all components in the library.
-                    </div>
-                  </Link>
-                </NavigationMenuLink>
-                <NavigationMenuLink asChild>
-                  <Link href="#">
-                    <div className="font-medium">Documentation</div>
-                    <div className="text-muted-foreground">
-                      Learn how to use the library.
-                    </div>
-                  </Link>
-                </NavigationMenuLink>
-                <NavigationMenuLink asChild>
-                  <Link href="#">
-                    <div className="font-medium">Blog</div>
-                    <div className="text-muted-foreground">
-                      Read our latest blog posts.
-                    </div>
-                  </Link>
-                </NavigationMenuLink>
-              </li>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Simple</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[200px] gap-4">
-              <li>
-                <NavigationMenuLink asChild>
-                  <Link href="#">Components</Link>
-                </NavigationMenuLink>
-                <NavigationMenuLink asChild>
-                  <Link href="#">Documentation</Link>
-                </NavigationMenuLink>
-                <NavigationMenuLink asChild>
-                  <Link href="#">Blocks</Link>
-                </NavigationMenuLink>
-              </li>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>With Icon</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[200px] gap-4">
-              <li>
-                <NavigationMenuLink asChild>
-                  <Link href="#" className="flex-row items-center gap-2">
-                    <CircleHelpIcon />
-                    Backlog
-                  </Link>
-                </NavigationMenuLink>
-                <NavigationMenuLink asChild>
-                  <Link href="#" className="flex-row items-center gap-2">
-                    <CircleIcon />
-                    To Do
-                  </Link>
-                </NavigationMenuLink>
-                <NavigationMenuLink asChild>
-                  <Link href="#" className="flex-row items-center gap-2">
-                    <CircleCheckIcon />
-                    Done
-                  </Link>
-                </NavigationMenuLink>
-              </li>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
+        {config.items.map((item, index) => (
+          <NavigationMenuItem key={index}>
+            {item.type === 'link' ? (
+              <NavigationMenuLink 
+                asChild 
+                className={cn(
+                  navigationMenuTriggerStyle(), 
+                  item.style?.transition === false && "transition-none"
+                )}
+              >
+                <Link href={item.href || '#'}>{item.label}</Link>
+              </NavigationMenuLink>
+            ) : (
+              <>
+                <NavigationMenuTrigger>{item.label}</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <HeaderNavDropdownContent content={item.content!} />
+                </NavigationMenuContent>
+              </>
+            )}
+          </NavigationMenuItem>
+        ))}
       </NavigationMenuList>
     </NavigationMenu>
   )
 }
 
-function ListItem({
+function HeaderNavDropdownContent({ content }: { content: HeaderNavDropdownContent }) {
+  const widthClass = getWidthClass(content.width)
+  const gridClass = content.layout === 'grid' && content.columns 
+    ? getGridClass(content.columns, content.layout)
+    : ''
+  
+  // Handle featured layout (like the Home dropdown)
+  if (content.layout === 'featured') {
+    return (
+      <ul className={cn("grid gap-2", widthClass, "lg:grid-cols-[.75fr_1fr]")}>
+        {content.sections?.map((section, index) => (
+          <HeaderNavSectionRenderer key={index} section={section} isFeatured={true} />
+        ))}
+      </ul>
+    )
+  }
+  
+  // Handle grid layout
+  if (content.layout === 'grid') {
+    return (
+      <ul className={cn("grid gap-2", widthClass, `md:${gridClass}`)}>
+        {content.sections?.map((section, index) => (
+          <HeaderNavSectionRenderer key={index} section={section} />
+        ))}
+      </ul>
+    )
+  }
+  
+  // Handle list layout
+  return (
+    <ul className={cn("grid gap-4", widthClass)}>
+      {content.sections?.map((section, index) => (
+        <HeaderNavSectionRenderer key={index} section={section} />
+      ))}
+    </ul>
+  )
+}
+
+function HeaderNavSectionRenderer({ section, isFeatured = false }: { section: HeaderNavSection, isFeatured?: boolean }) {
+  // Featured section (like the shadcn/ui card)
+  if (section.type === 'featured' && section.featured) {
+    return (
+      <li className="row-span-3">
+        <NavigationMenuLink asChild>
+          <Link
+            className={cn(
+              "flex h-full w-full flex-col justify-end rounded-md p-6 no-underline outline-hidden select-none focus:shadow-md",
+              getGradientClass(section.featured.gradient || 'muted')
+            )}
+            href={section.featured.href}
+          >
+            <div className="mt-4 mb-2 text-lg font-medium">
+              {section.featured.title}
+            </div>
+            <p className="text-muted-foreground text-sm leading-tight">
+              {section.featured.description}
+            </p>
+          </Link>
+        </NavigationMenuLink>
+      </li>
+    )
+  }
+  
+  // Description list (like Components dropdown)
+  if (section.type === 'description-list') {
+    return (
+      <>
+        {section.items?.map((item, index) => (
+          <HeaderNavListItem
+            key={index}
+            title={item.label}
+            href={item.href}
+          >
+            {item.description}
+          </HeaderNavListItem>
+        ))}
+      </>
+    )
+  }
+  
+  // Icon list (like With Icon dropdown)
+  if (section.type === 'icon-list') {
+    return (
+      <li>
+        {section.items?.map((item, index) => {
+          const IconComponent = item.icon
+          return (
+            <NavigationMenuLink key={index} asChild>
+              <Link href={item.href} className="flex items-center gap-2">
+                {IconComponent && <IconComponent className="h-4 w-4" />}
+                {item.label}
+              </Link>
+            </NavigationMenuLink>
+          )
+        })}
+      </li>
+    )
+  }
+  
+  // Simple list (like Simple dropdown)
+  if (section.type === 'list') {
+    return (
+      <li>
+        {section.items?.map((item, index) => (
+          <NavigationMenuLink key={index} asChild>
+            <Link href={item.href}>{item.label}</Link>
+          </NavigationMenuLink>
+        ))}
+      </li>
+    )
+  }
+  
+  return null
+}
+
+function HeaderNavListItem({
   title,
   children,
   href,
@@ -211,3 +262,5 @@ function ListItem({
     </li>
   )
 }
+
+export default HeaderNavigation
