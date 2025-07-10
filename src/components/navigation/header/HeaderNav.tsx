@@ -1,5 +1,7 @@
 "use client"
 
+// todo FIX THE HEADER NAV
+
 import * as React from "react"
 import Link from "next/link"
 import { LucideIcon } from "lucide-react"
@@ -137,9 +139,9 @@ function HeaderNavDropdownContent({ content }: { content: HeaderNavDropdownConte
   // Handle featured layout (like the Home dropdown)
   if (content.layout === 'featured') {
     return (
-      <ul className={cn("grid gap-2", widthClass, "lg:grid-cols-[.75fr_1fr]")}>
+      <ul className={cn("grid gap-3 p-6", widthClass, "lg:grid-cols-[.75fr_1fr]")}>
         {content.sections?.map((section, index) => (
-          <HeaderNavSectionRenderer key={index} section={section} isFeatured={true} />
+          <HeaderNavSectionRenderer key={index} section={section} />
         ))}
       </ul>
     )
@@ -148,7 +150,7 @@ function HeaderNavDropdownContent({ content }: { content: HeaderNavDropdownConte
   // Handle grid layout
   if (content.layout === 'grid') {
     return (
-      <ul className={cn("grid gap-2", widthClass, `md:${gridClass}`)}>
+      <ul className={cn("grid gap-3 p-4", widthClass, `md:${gridClass}`)}>
         {content.sections?.map((section, index) => (
           <HeaderNavSectionRenderer key={index} section={section} />
         ))}
@@ -158,7 +160,7 @@ function HeaderNavDropdownContent({ content }: { content: HeaderNavDropdownConte
   
   // Handle list layout
   return (
-    <ul className={cn("grid gap-4", widthClass)}>
+    <ul className={cn("grid gap-3 p-4", widthClass)}>
       {content.sections?.map((section, index) => (
         <HeaderNavSectionRenderer key={index} section={section} />
       ))}
@@ -166,7 +168,7 @@ function HeaderNavDropdownContent({ content }: { content: HeaderNavDropdownConte
   )
 }
 
-function HeaderNavSectionRenderer({ section, isFeatured = false }: { section: HeaderNavSection, isFeatured?: boolean }) {
+function HeaderNavSectionRenderer({ section }: { section: HeaderNavSection }) {
   // Featured section (like the shadcn/ui card)
   if (section.type === 'featured' && section.featured) {
     return (
@@ -174,15 +176,15 @@ function HeaderNavSectionRenderer({ section, isFeatured = false }: { section: He
         <NavigationMenuLink asChild>
           <Link
             className={cn(
-              "flex h-full w-full flex-col justify-end rounded-md p-6 no-underline outline-hidden select-none focus:shadow-md",
+              "flex h-full w-full select-none flex-col justify-end rounded-md p-6 no-underline outline-none focus:shadow-md",
               getGradientClass(section.featured.gradient || 'muted')
             )}
             href={section.featured.href}
           >
-            <div className="mt-4 mb-2 text-lg font-medium">
+            <div className="mb-2 mt-4 text-lg font-medium">
               {section.featured.title}
             </div>
-            <p className="text-muted-foreground text-sm leading-tight">
+            <p className="text-sm leading-tight text-muted-foreground">
               {section.featured.description}
             </p>
           </Link>
@@ -191,7 +193,7 @@ function HeaderNavSectionRenderer({ section, isFeatured = false }: { section: He
     )
   }
   
-  // Description list (like Components dropdown)
+  // Description list (like Components dropdown) - render individual items
   if (section.type === 'description-list') {
     return (
       <>
@@ -211,32 +213,46 @@ function HeaderNavSectionRenderer({ section, isFeatured = false }: { section: He
   // Icon list (like With Icon dropdown)
   if (section.type === 'icon-list') {
     return (
-      <li>
+      <>
         {section.items?.map((item, index) => {
           const IconComponent = item.icon
           return (
-            <NavigationMenuLink key={index} asChild>
-              <Link href={item.href} className="flex items-center gap-2">
-                {IconComponent && <IconComponent className="h-4 w-4" />}
-                {item.label}
-              </Link>
-            </NavigationMenuLink>
+            <li key={index}>
+              <NavigationMenuLink asChild>
+                <Link 
+                  href={item.href} 
+                  className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                >
+                  <div className="flex items-center gap-2">
+                    {IconComponent && <IconComponent className="h-4 w-4" />}
+                    <div className="text-sm font-medium leading-none">{item.label}</div>
+                  </div>
+                </Link>
+              </NavigationMenuLink>
+            </li>
           )
         })}
-      </li>
+      </>
     )
   }
   
   // Simple list (like Simple dropdown)
   if (section.type === 'list') {
     return (
-      <li>
+      <>
         {section.items?.map((item, index) => (
-          <NavigationMenuLink key={index} asChild>
-            <Link href={item.href}>{item.label}</Link>
-          </NavigationMenuLink>
+          <li key={index}>
+            <NavigationMenuLink asChild>
+              <Link 
+                href={item.href}
+                className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+              >
+                <div className="text-sm font-medium leading-none">{item.label}</div>
+              </Link>
+            </NavigationMenuLink>
+          </li>
         ))}
-      </li>
+      </>
     )
   }
   
@@ -252,9 +268,12 @@ function HeaderNavListItem({
   return (
     <li {...props}>
       <NavigationMenuLink asChild>
-        <Link href={href}>
-          <div className="text-sm leading-none font-medium">{title}</div>
-          <p className="text-muted-foreground line-clamp-2 text-sm leading-snug">
+        <Link 
+          href={href}
+          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+        >
+          <div className="text-sm font-medium leading-none">{title}</div>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
             {children}
           </p>
         </Link>

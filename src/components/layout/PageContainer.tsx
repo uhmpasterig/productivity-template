@@ -1,7 +1,7 @@
 import { cn } from "@/utils";
 import Header from "../navigation/header/Header";
 
-export default function PageContainer({
+export default async function PageContainer({
   children,
   className,
 }: {

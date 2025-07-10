@@ -1,7 +1,6 @@
 Aktuelles backup meines kopfes bei laengern pausen (alles was mir in dem moment in den sinn kommt):
-- Prefilled error wenn man in der error page auf contact support
-- Header komplett ueberarbeiten lol weil scheisse (FICK gradient (DER BESCHISSENE FICK GRADIENT HALT) rausmachen)
-- Authentication Flow einmal noch pruefen
+- Header komplett ueberarbeiten lol weil scheisse, die Card alignments und der Content in den Cards
+- Sizing der Pages unter anderem auf Mobile
 
 - Implement TRPC with a good System for API's including passing User in API's via a custom middleware
 
