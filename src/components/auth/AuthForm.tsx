@@ -15,6 +15,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { redirect } from "next/navigation";
 import Image from "next/image";
+import { Logo } from "../ui/logo";
 
 type AuthFormProps = {
   mode: "login" | "signup";
@@ -87,21 +88,12 @@ export default function AuthForm({ mode = "login" }: AuthFormProps) {
           >
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center gap-2">
-                <a
-                  href="#"
-                  className="flex flex-col items-center gap-2 font-medium"
-                >
+                <div className="flex flex-col items-center gap-2 font-medium">
                   <div className="flex size-8 items-center justify-center rounded-md">
-                    <Image
-                      loading="eager"
-                      src="/logo.svg"
-                      alt={siteConfig.name}
-                      width={32}
-                      height={32}
-                    />
+                    <Logo variant="icon" size="md" />
                   </div>
                   <span className="sr-only">{siteConfig.name}</span>
-                </a>
+                </div>
                 <h1 className="text-2xl font-bold">
                   Welcome to {siteConfig.name}
                 </h1>

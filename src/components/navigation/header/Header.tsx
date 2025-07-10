@@ -1,174 +1,94 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-
-import { Menu, X, ChevronDown, LogOut, Bell, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { headerConfig } from "@/config/navigation";
-import { siteConfig } from "@/config/site";
+import { useEffect, useState } from "react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { cn } from "@/utils/cn";
-import { HeaderNav } from "./HeaderNav";
-import { authConfig } from "@/config/auth";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { signOutAction } from "@/lib/actions/auth";
+import { AnimatePresence } from "framer-motion";
 
-type HeaderProps = {
-  user?: SupabaseUser | null;
-};
+// Import the new smaller components
+import { Logo } from "@/components/ui/logo";
+import HeaderNavigation from "./HeaderNav";
+import { HeaderActions } from "./HeaderActions";
+import { UserMenu, UserMenuSkeleton } from "./UserMenu";
+import { AuthButtons } from "./AuthButtons";
+import { MobileMenuToggle } from "./MobileMenuToggle";
+import { MobileMenu } from "./MobileMenu";
+import { pageNavigationConfig } from "@/config/page-navigation";
+import { createClient } from "@/lib/supabase/client";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export default function Header({ user }: HeaderProps) {
+export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
 
-  const handleSignOut = async () => {
-    await signOutAction();
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+      if (error) {
+        setLoading(false);
+        return;
+      } else {
+        setUser(user);
+      }
+      setLoading(false);
+    };
+    getUser();
+  }, [supabase]);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full",
+        "sticky top-0 z-50 h-16 w-full lg:px-16 md:px-8 px-4",
+        "flex items-center justify-between",
         "bg-background/80 backdrop-blur-lg border-b border-border/40 transition-none"
       )}
     >
-      <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
+      <div className="px-4 h-16 w-full flex items-center justify-between">
+        <div className="flex items-center justify-center space-x-8">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2 group">
-            <div className="relative">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">
-                  {siteConfig.name[0]}
-                </span>
-              </div>
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg blur opacity-20 group-hover:opacity-40 transition-opacity"></div>
-            </div>
-            <span className="font-semibold text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              {siteConfig.name}
-            </span>
-          </Link>
+          <Logo variant="full" size="md" />
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-1">
-            <HeaderNav />
+          <nav className="hidden lg:block items-center space-x-1">
+            <HeaderNavigation config={pageNavigationConfig} />
           </nav>
-
-          {/* Right Side */}
-          <div className="flex items-center space-x-4">
-            <ThemeToggle />
-            {/* Search */}
-            {headerConfig.features.search && (
-              <Button variant="ghost" size="icon" className="hidden md:flex">
-                <Search className="h-4 w-4" />
-              </Button>
-            )}
-
-            {/* Notifications */}
-            {user && headerConfig.features.notifications && (
-              <Button variant="ghost" size="icon" className="relative">
-                <Bell className="h-4 w-4" />
-                <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
-              </Button>
-            )}
-
-            {/* User Menu or Auth Buttons */}
-            {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="flex items-center space-x-2 pl-2"
-                  >
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage
-                        src={user.user_metadata.avatar_url}
-                        alt={user.user_metadata.name}
-                      />
-                      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white">
-                        {user.user_metadata.name?.[0] ||
-                          user.user_metadata.email?.[0].toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="hidden sm:block text-sm font-medium">
-                      {user.user_metadata.name ||
-                        user.user_metadata.email?.split("@")[0]}
-                    </span>
-                    <ChevronDown className="h-3 w-3" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel>
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium">
-                        {user.user_metadata.name || "User"}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {user.user_metadata.email}
-                      </p>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  {headerConfig.userMenu.map((item) => (
-                    <DropdownMenuItem key={item.href} asChild>
-                      <Link
-                        href={item.href}
-                        className="flex items-center space-x-2"
-                      >
-                        <item.icon className="h-4 w-4" />
-                        <span>{item.label}</span>
-                      </Link>
-                    </DropdownMenuItem>
-                  ))}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={handleSignOut}
-                    className="text-red-600"
-                  >
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Sign out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <div className="hidden md:flex items-center space-x-2">
-                <Button variant="ghost" asChild>
-                  <Link href={authConfig.loginUrl}>Sign in</Link>
-                </Button>
-                <Button
-                  asChild
-                  className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-                >
-                  <Link href="/signup">Get started</Link>
-                </Button>
-              </div>
-            )}
-
-            {/* Mobile Menu Toggle */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              {isMobileMenuOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
-            </Button>
-          </div>
         </div>
+
+        {/* Right Side */}
+        <div className="items-center space-x-4 hidden lg:flex justify-end w-96">
+          {/* Header Actions (theme, search, notifications) */}
+          <HeaderActions />
+
+          {/* User Menu or Auth Buttons */}
+          {loading || !user ? <AuthButtons /> : <UserMenu user={user} />}
+        </div>
+        {/* Mobile Menu Toggle */}
+        <MobileMenuToggle
+          isOpen={isMobileMenuOpen}
+          onToggle={toggleMobileMenu}
+        />
       </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <MobileMenu
+            isOpen={isMobileMenuOpen}
+            user={user}
+            onClose={() => setIsMobileMenuOpen(false)}
+            config={pageNavigationConfig}
+          />
+        )}
+      </AnimatePresence>
     </header>
   );
 }

@@ -1,7 +1,7 @@
 import { cn } from "@/utils";
 import Header from "../navigation/header/Header";
 
-export default function PageContainer({
+export default async function PageContainer({
   children,
   className,
 }: {
@@ -11,14 +11,15 @@ export default function PageContainer({
   return (
     <>
       <Header />
-      <div
+      <main
         className={cn(
-          "bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10",
+          "bg-background flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center gap-6 p-6 md:p-10",
           className
         )}
       >
         {children}
-      </div>
+      </main>
+      {/* footer here later */}
     </>
   );
 }
