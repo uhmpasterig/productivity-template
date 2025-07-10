@@ -1,21 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { SuccessPage, commonActions } from "@/components/ui/status-page-presets";
 import { toast } from "sonner";
-import { User } from "@supabase/supabase-js";
-import {
-  SuccessPage,
-  commonActions,
-} from "@/components/ui/status-page-presets";
-import { clientRedirectToErrorPage } from "@/utils/error";
+import { useErrorHandler } from "@/components/ui/error-boundary";
+import { AuthError, logError } from "@/utils/error";
 
 export default function AuthCallbackPage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const supabase = createClient();
+  const { handleError } = useErrorHandler();
 
   useEffect(() => {
     const getUser = async () => {
@@ -26,11 +25,9 @@ export default function AuthCallbackPage() {
         } = await supabase.auth.getUser();
 
         if (error) {
-          clientRedirectToErrorPage({
-            error: "Authentication Failed",
-            message: error.message,
-            goBack: true,
-          });
+          const authError = new AuthError(error.message, "AUTH_CALLBACK_ERROR");
+          logError(authError, "auth-callback");
+          handleError(authError);
           return;
         }
 
@@ -38,22 +35,23 @@ export default function AuthCallbackPage() {
           setUser(user);
           toast.success(`Successfully logged in as ${user.email}!`);
         } else {
-          router.push("/auth/login");
+          // No user but no error - redirect to login
+          router.push("/login");
         }
-      } catch (error) {
-        console.error(error);
-        clientRedirectToErrorPage({
-          error: "Authentication Failed",
-          message: "Something went wrong",
-          goBack: true,
-        });
+      } catch {
+        const authError = new AuthError(
+          "Authentication failed during callback", 
+          "AUTH_CALLBACK_UNKNOWN"
+        );
+        logError(authError, "auth-callback");
+        handleError(authError);
       } finally {
         setLoading(false);
       }
     };
 
     getUser();
-  }, [supabase, router]);
+  }, [supabase, router, handleError]);
 
   if (loading) {
     return (
