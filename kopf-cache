@@ -3,6 +3,11 @@ Aktuelles backup meines kopfes bei laengern pausen (alles was mir in dem moment 
 - Header komplett ueberarbeiten lol weil scheisse (FICK gradient (DER BESCHISSENE FICK GRADIENT HALT) rausmachen)
 - Authentication Flow einmal noch pruefen
 
+- Implement TRPC with a good System for API's including passing User in API's via a custom middleware
+
+- Improve Error handling, check docs: 
+https://nextjs.org/docs/app/getting-started/error-handling
+
 Header Inspo:
 - Mobile: https://www.shadcnblocks.com/block/navbar16
 - Desktop: https://www.shadcnblocks.com/block/navbar3

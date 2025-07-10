@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { redirect, usePathname } from "next/navigation";
+
 import { Menu, X, ChevronDown, LogOut, Bell, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,7 +14,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { headerConfig } from "@/config/navigation";
 import { siteConfig } from "@/config/site";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
@@ -30,9 +29,6 @@ type HeaderProps = {
 
 export default function Header({ user }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const pathname = usePathname();
-
-  const isActive = (href: string) => pathname === href;
 
   const handleSignOut = async () => {
     await signOutAction();
@@ -152,7 +148,7 @@ export default function Header({ user }: HeaderProps) {
                   asChild
                   className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
                 >
-                  <Link href="/auth/signup">Get started</Link>
+                  <Link href="/signup">Get started</Link>
                 </Button>
               </div>
             )}
