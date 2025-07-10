@@ -7,14 +7,46 @@ import { authConfig } from "@/config/auth";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
-import { LogOut, ChevronDown, User } from "lucide-react";
+import { LogOut, ChevronDown } from "lucide-react";
 import { signOutAction } from "@/lib/actions/auth";
-import { m, motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import type { HeaderNavConfig } from "./HeaderNav";
 import { Separator } from "@radix-ui/react-dropdown-menu";
-import { UserMenu } from "./UserMenu";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { type LucideIcon } from "lucide-react";
+
+interface NavFeaturedItem {
+  href: string;
+  title: string;
+  description: string;
+  gradient?: string;
+}
+
+interface NavSubItem {
+  href: string;
+  label: string;
+  description?: string;
+  icon?: LucideIcon;
+}
+
+interface NavSection {
+  title?: string;
+  type?: string;
+  featured?: NavFeaturedItem;
+  items?: NavSubItem[];
+}
+
+interface NavContent {
+  sections?: NavSection[];
+}
+
+interface NavItem {
+  type: "link" | "dropdown" | "mega";
+  label: string;
+  href?: string;
+  content?: NavContent;
+}
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -77,8 +109,8 @@ export function MobileMenu({ isOpen, user, onClose, config }: MobileMenuProps) {
         return "from-muted/50 to-muted bg-gradient-to-b";
     }
   };
-
-  const renderNavItem = (item: any, index: number) => {
+  
+  const renderNavItem = (item: NavItem, index: number) => {
     if (item.type === "link") {
       return (
         <Link
@@ -124,7 +156,7 @@ export function MobileMenu({ isOpen, user, onClose, config }: MobileMenuProps) {
               >
               <div className="ml-4 space-y-3 border-l border-border pl-4">
                 {item.content?.sections?.map(
-                  (section: any, sectionIndex: number) => (
+                  (section: NavSection, sectionIndex: number) => (
                     <div key={sectionIndex} className="space-y-2">
                       {section.title && (
                         <div className="text-sm font-medium text-muted-foreground">
@@ -157,7 +189,7 @@ export function MobileMenu({ isOpen, user, onClose, config }: MobileMenuProps) {
                         </Tooltip>
                       )}
 
-                      {section.items?.map((subItem: any, subIndex: number) => (
+                      {section.items?.map((subItem: NavSubItem, subIndex: number) => (
                         <Tooltip key={subIndex}>
                           <TooltipTrigger asChild>
                             <Link

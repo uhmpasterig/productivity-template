@@ -15,7 +15,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { headerConfig } from "@/config/navigation";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { signOutAction } from "@/lib/actions/auth";
-import { Skeleton } from "@/components/ui/skeleton";
 
 interface UserMenuProps {
   user: SupabaseUser;
@@ -86,16 +85,3 @@ export function UserMenu({ user }: UserMenuProps) {
     </DropdownMenu>
   );
 } 
-
-export function UserMenuSkeleton() {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="flex items-center space-x-2 pl-2">
-          <Skeleton className="h-8 w-8 rounded-full" />
-          <Skeleton className="h-4 w-32 rounded-md" />
-        </Button>
-      </DropdownMenuTrigger>
-    </DropdownMenu>
-  );
-}

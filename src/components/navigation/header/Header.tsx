@@ -9,13 +9,12 @@ import { AnimatePresence } from "framer-motion";
 import { Logo } from "@/components/ui/logo";
 import HeaderNavigation from "./HeaderNav";
 import { HeaderActions } from "./HeaderActions";
-import { UserMenu, UserMenuSkeleton } from "./UserMenu";
+import { UserMenu } from "./UserMenu";
 import { AuthButtons } from "./AuthButtons";
 import { MobileMenuToggle } from "./MobileMenuToggle";
 import { MobileMenu } from "./MobileMenu";
 import { pageNavigationConfig } from "@/config/page-navigation";
 import { createClient } from "@/lib/supabase/client";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
