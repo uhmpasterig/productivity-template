@@ -15,7 +15,7 @@ export const navigationConfig = {
   ],
 };
 
-import { Settings, HelpCircle, User, CreditCard, Shield, LogOut } from "lucide-react";
+import { Settings, HelpCircle, User, CreditCard, Shield } from "lucide-react";
 
 export const headerConfig = {
   navigation: [

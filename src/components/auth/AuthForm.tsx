@@ -14,7 +14,6 @@ import AuthFeedback from "./AuthFeedback";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { redirect } from "next/navigation";
-import Image from "next/image";
 import { Logo } from "../ui/logo";
 
 type AuthFormProps = {

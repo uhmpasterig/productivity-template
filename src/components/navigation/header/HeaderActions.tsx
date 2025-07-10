@@ -1,4 +1,4 @@
-import { Bell, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { headerConfig } from "@/config/navigation";
@@ -8,7 +8,7 @@ interface HeaderActionsProps {
   user?: SupabaseUser | null;
 }
 
-export function HeaderActions({ user }: HeaderActionsProps) {
+export function HeaderActions({  }: HeaderActionsProps) {
   return (
     <div className="items-center space-x-4 flex-row flex">
       <ThemeToggle />

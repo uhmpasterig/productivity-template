@@ -1,26 +1,4 @@
 import { HeaderNavConfig } from "@/components/navigation/header/HeaderNav";
-import { 
-  BarChart3, 
-  Users, 
-  Shield, 
-  Zap, 
-  CreditCard, 
-  Settings, 
-  BookOpen, 
-  MessageSquare, 
-  Award, 
-  Globe, 
-  Smartphone, 
-  Database,
-  Code,
-  Palette,
-  Layout,
-  Package,
-  Cloud,
-  Target,
-  Briefcase,
-  GraduationCap
-} from "lucide-react";
 
 // Comprehensive Sample Configuration for Modern SaaS Application
 export const pageNavigationConfig: HeaderNavConfig = {
